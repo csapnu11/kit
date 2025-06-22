@@ -1,12 +1,13 @@
 # main file for bot
 
 import discord
-
-TOKEN = 'YOUR_BOT_TOKEN'          # Replace with your bot token
-CHANNEL_ID = 123456789012345678   # Replace with your channel ID (as an integer)
+from config import TOKEN, CHANNEL_ID  
+from grocery_handler import COMMAND_MAP
 
 intents = discord.Intents.default()
-intents.message_content = True  # Required to read message content
+intents.message_content = True
+intents.guilds = True
+intents.messages = True
 
 client = discord.Client(intents=intents)
 
@@ -17,10 +18,36 @@ async def on_ready():
 
 @client.event
 async def on_message(message):
-    # Ignore messages from other channels or from the bot itself
-    if message.channel.id != CHANNEL_ID or message.author == client.user:
+    if message.channel.id != CHANNEL_ID:
         return
 
+    # Avoid responding to itself
+    if message.author == client.user:
+        return
+
+    # Print message to terminal
     print(f'[{message.author}]: {message.content}')
 
+    # If the bot is mentioned in the message, process reply
+    if client.user in message.mentions:
+        await create_reply(message)
+
+
+async def create_reply(message):
+    # find command tag
+    content_upper = message.content.upper()
+    found = False
+
+    for command, handler in COMMAND_MAP.items():
+        if command in content_upper:
+            await handler(message)
+            break  # Only run one command per message
+    
+    if not found:
+        await message.channel.send("❓ Unknown command. Type `HELP GL` for available commands. Awowowowo~")
+
+
+
+
+# start process
 client.run(TOKEN)

@@ -13,3 +13,7 @@ __pycache__/
 
 # config
 config.py
+
+
+# misc files
+grocerylist.txt
