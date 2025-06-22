@@ -1,0 +1,12 @@
+# Ignore the virtual environment folder
+env/
+
+# Python bytecode files
+__pycache__/
+*.py[cod]
+
+# Environment variables file (if you create one)
+.env
+
+# Logs
+*.log
