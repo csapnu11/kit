@@ -36,17 +36,12 @@ async def on_message(message):
 async def create_reply(message):
     # find command tag
     content_upper = message.content.upper()
-    found = False
-
     for command, handler in COMMAND_MAP.items():
         if command in content_upper:
             await handler(message)
-            found = True
-            break  # Only run one command per message
-    
+            return # Only run one command per message
 
-    if not found:
-        await message.channel.send("❓ Unknown command. Type `HELP GL` for available commands. Awowowowo~")
+    await message.channel.send("❓ Unknown command. Type `HELP GL` for available commands. Awowowowo~")
 
 
 
